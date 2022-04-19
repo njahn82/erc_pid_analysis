@@ -1,0 +1,6 @@
+# Ignore Mac DS_Store files
+.DS_Store
+**/.DS_Store
+# Files, which are above 100MB
+data/oaire_erc_urls.csv
+data/moap_src_df.csv
