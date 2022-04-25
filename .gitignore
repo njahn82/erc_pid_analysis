@@ -4,3 +4,4 @@
 # Files, which are above 100MB
 data/oaire_erc_urls.csv
 data/moap_src_df.csv
+.Rproj.user
