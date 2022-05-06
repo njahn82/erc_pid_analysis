@@ -84,17 +84,31 @@ panel_df %>%
   inner_join(projects_by_domain, by = "reference_evaluation_domain") %>%
   mutate(prop = projects_with_repo_works / projects)
 
-## Number of work by panel
+## Number of work by repo and panel
 
-panel_df %>%
-  group_by(reference_evaluation_panel, officialname) %>%
+panel_table_a <- panel_df %>%
+  group_by(reference_evaluation_panel, officialname, oaire_result_type, openairecompatibility, opendoar_link) %>%
   summarise(works = n_distinct(oaire_result_id),
             projects_with_repo_works = n_distinct(grant_id)) %>%
   inner_join(projects_by_panel, by = "reference_evaluation_panel") %>%
-  mutate(prop = projects_with_repo_works / projects)
+  mutate(prop = projects_with_repo_works / projects) 
+
+write_csv(panel_table_a, "data/repo_works_by_panel.csv")
+
+## Number of work by panel
+
+panel_df %>%
+  group_by(reference_evaluation_panel, oaire_result_type) %>%
+  summarise(works = n_distinct(oaire_result_id),
+            projects_with_repo_works = n_distinct(grant_id)) %>%
+  inner_join(projects_by_panel, by = "reference_evaluation_panel") %>%
+  select(-prop) %>%
+  write_csv("data/panel_works.csv")
 
 
 
+
+####
 panel_df_plot <- panel_df %>%
   filter(oaire_result_type == "publication", !is.na(panel_domain)) %>%
   group_by(panel_domain, officialname) %>%

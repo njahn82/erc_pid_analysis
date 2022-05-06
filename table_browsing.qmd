@@ -1,0 +1,388 @@
+---
+title: "ERC Repository Usage"
+format:
+  html:
+    page-layout: "full"
+editor: visual
+execute: 
+  echo: false
+  warning: false
+---
+
+
+<p class="lead">This tool provides insights into the usage of repositories to make
+ERC-funded research available. The interactive table breaks down usage by the number and percentage of works deposited ("Deposits") and the number and percentage of ERC projects making use of a repository ("Projects"). Figures are presented by repository type and ERC panel.</p>
+
+```{r}
+#| echo: false
+#| warnings: false
+#| message: false
+#| label: setup
+library(tidyverse)
+library(reactable)
+library(htmltools)
+library(glue)
+library(crosstalk)
+
+# Repo usage by ERC panel
+repo_by_panel <- readr::read_csv("data/repo_works_by_panel.csv")
+panel_all <- readr::read_csv("data/panel_works.csv")
+```
+
+```{r}
+#| label: tidy_data
+
+# panel stat
+panel_stat <- panel_all %>%
+  select(1:2, panel_works = works)
+
+# create table
+table_df <- repo_by_panel %>%
+  inner_join(panel_stat,
+             by = c("reference_evaluation_panel", "oaire_result_type")) %>%
+  mutate(reference_evaluation_panel = gsub("_REF", "", reference_evaluation_panel)) %>%
+  mutate(
+    label = glue::glue(
+      "{reference_evaluation_panel}: {reference_evaluation_panel_title}"
+    )
+  ) %>%
+  mutate(works_prop = works / panel_works,
+         projects_prop = projects_with_repo_works / projects) %>%
+  # Prepare table order
+  select(
+    reference_evaluation_panel,
+    label,
+    officialname,
+    opendoar_link,
+    oaire_result_type,
+    openairecompatibility,
+    works,
+    works_prop,
+    projects_with_repo_works,
+    projects,
+    projects_prop
+  ) %>%
+  mutate(label = ifelse(label == "NA: NA", "No panel info", label))
+
+## backup
+write_csv(table_df, "data/repo_usage_reactable_raw.csv")
+```
+
+```{r}
+#| label: crosstalk definition
+## Define shared Crosstalk object
+shared_df <- SharedData$new(table_df)
+```
+
+```{r}
+#|l label: reactable definition
+#' React bar chart helper
+#'
+#' From <https://glin.github.io/reactable/articles/building-twitter-followers.html>
+#'
+#' @importFrom htmltools div
+#'
+#' @noRd
+react_bar_chart <-
+  function(label,
+           width = "100%",
+           height = "14px",
+           fill = "#00bfc4",
+           background = NULL) {
+    bar <-
+      htmltools::div(style = list(
+        background = fill,
+        width = width,
+        height = height
+      ))
+    chart <-
+      htmltools::div(style = list(
+        flexGrow = 1,
+        marginLeft = "6px",
+        background = background
+      ),
+      bar)
+    htmltools::div(style = list(display = "flex", alignItems = "center", marginLeft = "10px"), label, chart)
+  }
+
+
+# prepare prop bars
+g <- reactable::reactable(
+  shared_df,
+  pagination = TRUE,
+  highlight = TRUE,
+  # new in v0.2.3.9000
+  defaultColDef = colDef(vAlign = "center", headerClass = "header"),
+  defaultSorted = "works",
+  defaultSortOrder = "desc",
+  style = list(fontFamily = "Karla",
+               whiteSpace = "pre"),
+  columns = list(
+    # label
+    officialname = colDef(name = "Repository",
+                   cell = function(value, index) {
+                     repo_info <- htmltools::tags$a(
+                    href = shared_df$data()$opendoar_link[index],
+                    as.character(value),
+                    target="_blank"
+                )
+                tagList(
+                    div(style = list(fontWeight = 400, color = "#333"), repo_info))
+            },
+      minWidth = 200,
+      align = "left",
+      style = list(whiteSpace = "pre"),
+      sticky = "left"),
+    openairecompatibility = colDef(
+      name = "OpenAIRE Compatibility",
+      minWidth = 150,
+      align = "left"
+    ),
+    works = colDef(
+      name = "Deposits",
+      format = colFormat(separators = TRUE, locales = "en-GB"),
+      width = 100,
+      style = list(whiteSpace = "pre"),
+      class = "number"
+    ),
+    works_prop = colDef(
+      name = "% of Total",
+      cell = function(value) {
+        value <- paste0(format(round(value * 100, 1), nsmall = 1), "%")
+        value <- format(value, width = 5, justify = "right")
+        react_bar_chart(value,
+                        width = value,
+                        fill = "#0093c7ff",
+                        background = "#e1e1e1")
+      },
+      align = "center",
+      style = list(whiteSpace = "pre"),
+      class = "number",
+      html = TRUE,
+      minWidth = 130
+    ),
+    projects_with_repo_works = colDef(
+      name = "Projects",
+      format = colFormat(separators = TRUE, locales = "en-GB"),
+      width = 100,
+      style = list(whiteSpace = "pre"),
+      class = "number"),
+   projects_prop = colDef(
+      name = "% of Total",
+      cell = function(value) {
+        value <- paste0(format(round(value * 100, 1), nsmall = 1), "%")
+        value <- format(value, width = 5, justify = "right")
+        react_bar_chart(value,
+                        width = value,
+                        fill = "#c70093",
+                        background = "#e1e1e1")
+      },
+      align = "center",
+      style = list(whiteSpace = "pre"),
+      class = "number",
+      html = TRUE,
+      minWidth = 130
+    ),
+    # don't show
+    reference_evaluation_panel = colDef(
+      show = FALSE
+    ),
+    label = colDef(
+      show = FALSE
+    ),
+    opendoar_link = colDef(
+      show = FALSE
+    ),
+    projects = colDef(
+      show = FALSE
+    ),
+   oaire_result_type = colDef(
+     show = FALSE
+   )
+  ),
+  compact = TRUE,
+  searchable = TRUE,
+  theme =  reactableTheme(
+    searchInputStyle = list(width = "100%")
+),
+ language = reactableLang(
+      pageInfo = "{rowStart}\u2013{rowEnd} of {rows} repositories",
+      pagePrevious = "\u276e",
+      pageNext = "\u276f",
+    ),
+# Create column groups
+  columnGroups = list(
+    colGroup(
+      name = "Repository Usage",
+      columns = c("works", "works_prop", "projects_with_repo_works", "projects_prop"),
+      headerClass = "group-header"
+    )
+))
+```
+
+
+```{r}
+### Load font from Google Fonts
+htmltools::div(
+  class = "agreement-tbl",
+  # filters,
+  htmltools::div(
+    class = "filters",
+    htmltools::div(
+      class = "filter-input-type",
+      filter_select(
+        "filter_type",
+        "Repository Type",
+        shared_df,
+        ~ oaire_result_type,
+        multiple = FALSE
+      )
+    ),
+    htmltools::div(
+      class = "filter-input",
+      filter_select(
+        "filter_panel",
+        "ERC Panel",
+        shared_df,
+        ~ label,
+        multiple = FALSE
+      )
+    ),
+  ),
+  # table
+  g,
+  # footer
+  htmltools::div(
+    class = "agreement-footer", 
+      "Data sources: OpenAIRE Research Graph, MOAP.")
+  )
+```
+
+
+
+```{r}
+tags$link(href = "https://fonts.googleapis.com/css?family=Karla:400,700|Fira+Mono&display=fallback", rel = "stylesheet")
+```
+
+```{css}
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  margin-left: -32px;
+}
+
+.filter-input {
+  margin-top: 4px;
+  margin-left: 32px;
+  flex: 1;
+  min-width: 250px;
+}
+
+.filter-input-type {
+  margin-top: 4px;
+  margin-left: 32px;
+  flex: 1;
+  max-width: 200px;
+}
+
+.filter-input label,
+.filter-input-type label {
+  color: hsl(0, 0%, 45%);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.group-header {
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.filter-input select,
+.filter-input input[type="search"] {
+  padding: 0 6px;
+  height: 32px;
+}
+
+.filter-input input[type="search"] {
+  /* Reset Bootstrap 3 styles */
+  -webkit-appearance: searchfield;
+}
+
+.filter-input input[type="search"]::-webkit-search-cancel-button {
+  /* Reset Bootstrap 3 styles */
+  -webkit-appearance: searchfield-cancel-button;
+}
+
+
+.followers-tbl a {
+  color: inherit;
+}
+.header {
+  border-bottom: 2px solid #555;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+.header:hover {
+  background-color: #eee;
+}
+/* Highlight headers when sorting */
+.header:hover,
+.header[aria-sort="ascending"],
+.header[aria-sort="descending"] {
+  background-color: rgba(236, 236, 237, 1);
+}
+.agreement-footer {
+  margin: 18px 0;
+  font-size: 10px;
+  font-family: "Karla", Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.agreement-tbl {
+  margin: 18px 0;
+  font-size: 14px;
+}
+
+.bar-cell {
+  display: flex;
+  align-items: center;
+}
+
+.number {
+  font-family: "Fira Mono", Consolas, Monaco, monospace;
+  font-size: 13.5px;
+  white-space: pre;
+}
+
+.bar-chart {
+  flex-grow: 1;
+  margin-left: 6px;
+  height: 14px;
+}
+
+.bar {
+  height: 100%;
+}
+
+
+.border-left {
+  border-left: 1px solid #b5b5b5;
+}
+
+.name {
+  font-weight: 900;
+}
+```
+
+```{js, echo = FALSE}
+ /* https://stackoverflow.com/a/66216595 */
+$(document).ready(function() {
+    document.getElementById("filter_type").getElementsByClassName("selectized")[0].selectize.setValue("publication", false);
+    document.getElementById("filter_panel").getElementsByClassName("selectized")[0].selectize.setValue("LS01: Molecular Biology, Biochemistry, Structural Biology and Molecular Biophysics", false);
+});
+```
