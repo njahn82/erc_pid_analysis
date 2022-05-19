@@ -3,6 +3,7 @@ title: "ERC Repository Usage"
 format:
   html:
     page-layout: "full"
+    self-contained: true
 editor: visual
 execute: 
   echo: false
@@ -131,8 +132,7 @@ g <- reactable::reactable(
             },
       minWidth = 200,
       align = "left",
-      style = list(whiteSpace = "pre"),
-      sticky = "left"),
+      style = list(whiteSpace = "pre")),
     openairecompatibility = colDef(
       name = "OpenAIRE Compatibility",
       minWidth = 150,
