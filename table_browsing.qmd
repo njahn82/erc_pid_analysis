@@ -10,9 +10,11 @@ execute:
   warning: false
 ---
 
+<p class="lead">
 
-<p class="lead">This tool provides insights into the usage of repositories to make
-ERC-funded research available. The interactive table breaks down usage by the number and percentage of works deposited ("Deposits") and the number and percentage of ERC projects making use of a repository ("Projects"). Figures are presented by repository type and ERC panel.</p>
+This tool provides insights into the usage of repositories to make ERC-funded research available. The interactive table breaks down usage by the number and percentage of works deposited ("Deposits") and the number and percentage of ERC projects making use of a repository ("Projects"). Figures are presented by repository type and ERC panel.
+
+</p>
 
 ```{r}
 #| echo: false
@@ -220,7 +222,6 @@ g <- reactable::reactable(
 ))
 ```
 
-
 ```{r}
 ### Load font from Google Fonts
 htmltools::div(
@@ -257,8 +258,6 @@ htmltools::div(
       "Data sources: OpenAIRE Research Graph, MOAP.")
   )
 ```
-
-
 
 ```{r}
 tags$link(href = "https://fonts.googleapis.com/css?family=Karla:400,700|Fira+Mono&display=fallback", rel = "stylesheet")

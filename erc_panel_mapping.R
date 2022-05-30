@@ -4,7 +4,7 @@ library(tidytext)
 # Internal ERC data
 erc_panels <- readxl::read_xlsx("erc_data/erc-grants-domains-panels.xlsx", guess_max = 50000)
 erc_tmp <- erc_panels %>%
-  filter(PROGRAMME == "H2020") %>%
+ # filter(PROGRAMME == "H2020") %>%
   select(grant_id = PROPOSAL_ID, acronym = PROPOSAL_ACRONYM,
          title = PROPOSAL_TITLE, programme = PROGRAMME, 
          reference_evaluation_domain = REFERENCE_EVALUATION_DOMAIN,
@@ -12,6 +12,10 @@ erc_tmp <- erc_panels %>%
          reference_evaluation_panel_title =  `REFERENCE_EVALUATION _PANEL TITLES`,
          original_grant = `ORIGINAL GRANT (FOR PROOF OF CONCEPT (POC))`
          ) 
+# ERC matching table panel titles, they slightly changed from fp7 to h2020
+erc_2020_panels <- erc_tmp %>%
+  filter(programme == "H2020") %>% 
+  distinct(reference_evaluation_panel, reference_evaluation_panel_title) 
 
 # PoC call schema projects (Proof od Concept) are projects that derive from other ERC grants
 # and the ERC panel can be derived from the original one (grant no available in 
@@ -22,11 +26,17 @@ orig_poc <- erc_tmp %>%
   filter(!is.na(original_grant)) %>%
   select(grant_id, original_grant) %>%
   inner_join(erc_tmp, by = c("original_grant" = "grant_id")) %>%
-  select(-original_grant.y)
+  select(grant_id, reference_evaluation_panel_orig = reference_evaluation_panel)
 
 erc_df <- erc_tmp %>%
-  filter(!grant_id %in% orig_poc$grant_id) %>%
-  bind_rows(orig_poc)
+  left_join(orig_poc, by = "grant_id") %>%
+  mutate(reference_evaluation_panel = 
+           ifelse(is.na(reference_evaluation_panel), 
+                  reference_evaluation_panel_orig, 
+                  reference_evaluation_panel)) 
+# backup
+write_csv(erc_df, "erc_data/erc-panels-tidy.csv")
+
 
 # MOAP
 moap_src_df_repo_only <- readr::read_csv("data/moap_src_df_repo_only.csv") %>%
@@ -34,19 +44,26 @@ moap_src_df_repo_only <- readr::read_csv("data/moap_src_df_repo_only.csv") %>%
   # remove unknown repo
   filter(officialname != "Unknown Repository")
 
+
 # Key figures
 
 ## Number of ERC H2020 projects
-no_erc_projects <- erc_df %>%
+erc_2020 <- erc_df %>%
+  filter(programme == "H2020") %>%
+  # harmonize panel titles
+  select(-reference_evaluation_panel_title) %>%
+  left_join(erc_2020_panels, by = "reference_evaluation_panel")
+
+no_erc_projects <- erc_2020 %>%
   distinct(grant_id) %>%
   nrow()
 ## Number and proportion ERC H2020 projects with at least one repository publication
-erc_with_repo <- erc_df %>% 
-  filter(grant_id %in% moap_src_df_repo_only$grant_id) %>% 
+erc_with_repo <- erc_2020 %>% 
+  filter(grant_id %in% moap_src_df_repo_only$grant_id, programme == "H2020") %>% 
   distinct(grant_id) %>%
   nrow()
 
-erc_with_repo / no_erc_projects
+erc_with_repo / no_erc_projects 
 
 ## by repository type
 moap_src_df_repo_only %>%
@@ -57,14 +74,14 @@ moap_src_df_repo_only %>%
 # Reference evaluation domain and panels analysis
 
 ## Breakdown projects by domain 
-projects_by_domain <- erc_df %>%
+projects_by_domain <- erc_2020 %>%
   group_by(reference_evaluation_domain) %>%
   summarise(projects = n_distinct(grant_id)) %>%
   mutate(prop = projects / no_erc_projects)
 projects_by_domain
 
 ## Breakdown projects by panels
-projects_by_panel <- erc_df %>%
+projects_by_panel <- erc_2020 %>%
   group_by(reference_evaluation_panel, reference_evaluation_panel_title) %>%
   summarise(projects = n_distinct(grant_id)) %>%
   mutate(prop = projects / no_erc_projects)
@@ -73,7 +90,7 @@ projects_by_panel
 # Repo Usage
 
 ## Prepare data
-panel_df <- inner_join(moap_src_df_repo_only, erc_df, by = c("grant_id"))  %>%
+panel_df <- inner_join(moap_src_df_repo_only, erc_2020, by = c("grant_id"))  %>%
   mutate(officialname = gsub("ZENODO", "Zenodo", officialname)) 
 
 ## Number of work by domain

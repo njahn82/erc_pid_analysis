@@ -1,53 +1,53 @@
 reference_evaluation_panel,oaire_result_type,works,projects_with_repo_works,reference_evaluation_panel_title,projects
-LS01_REF,dataset,15,10,"Molecular Biology, Biochemistry, Structural Biology and Molecular Biophysics",194
-LS01_REF,publication,933,126,"Molecular Biology, Biochemistry, Structural Biology and Molecular Biophysics",194
-LS02_REF,dataset,31,11,"Genetics, Omics, Bioinformatics and Systems Biology",200
-LS02_REF,publication,899,128,"Genetics, Omics, Bioinformatics and Systems Biology",200
-LS03_REF,dataset,9,6,Cellular and Developmental Biology,179
-LS03_REF,publication,609,117,Cellular and Developmental Biology,179
-LS04_REF,dataset,2,1,"Physiology, Pathophysiology and Endocrinology",258
-LS04_REF,publication,1132,166,"Physiology, Pathophysiology and Endocrinology",258
-LS05_REF,dataset,7,6,Neuroscience and Neural Disorders,293
-LS05_REF,publication,1027,174,Neuroscience and Neural Disorders,293
-LS06_REF,dataset,10,3,Immunity and Infection,198
-LS06_REF,publication,925,130,Immunity and Infection,198
-LS07_REF,dataset,19,13,"Applied Medical Technologies, Diagnostics, Therapies and Public Health",379
-LS07_REF,publication,2691,241,"Applied Medical Technologies, Diagnostics, Therapies and Public Health",379
-LS08_REF,dataset,64,35,"Ecology, Evolution and Environmental Biology",263
-LS08_REF,publication,1591,166,"Ecology, Evolution and Environmental Biology",263
-LS09_REF,dataset,30,11,"Applied Life Sciences, Biotechnology, and Molecular and Biosystems Engineering",215
-LS09_REF,publication,1025,121,"Applied Life Sciences, Biotechnology, and Molecular and Biosystems Engineering",215
-PE01_REF,dataset,7,3,Mathematics,231
-PE01_REF,publication,3753,183,Mathematics,231
-PE02_REF,dataset,53,16,Fundamental Constituents of Matter,341
-PE02_REF,publication,4837,247,Fundamental Constituents of Matter,341
-PE03_REF,dataset,38,26,Condensed Matter Physics,313
-PE03_REF,publication,3609,237,Condensed Matter Physics,313
-PE04_REF,dataset,36,15,Physical and Analytical Chemical Sciences,290
-PE04_REF,publication,2442,196,Physical and Analytical Chemical Sciences,290
-PE05_REF,dataset,34,10,Synthetic Chemistry and Materials,379
-PE05_REF,publication,2924,243,Synthetic Chemistry and Materials,379
-PE06_REF,dataset,82,20,Computer Science and Informatics,369
-PE06_REF,publication,5034,279,Computer Science and Informatics,369
-PE07_REF,dataset,10,6,Systems and Communication Engineering,316
-PE07_REF,publication,3626,202,Systems and Communication Engineering,316
-PE08_REF,dataset,41,17,Products and Processes Engineering,418
-PE08_REF,publication,3119,247,Products and Processes Engineering,418
-PE09_REF,dataset,22,12,Universe Sciences,243
-PE09_REF,publication,5678,191,Universe Sciences,243
-PE10_REF,dataset,84,44,Earth System Science,266
-PE10_REF,publication,1980,172,Earth System Science,266
-SH01_REF,dataset,4,5,"Individuals, Markets and Organisations",193
-SH01_REF,publication,363,81,"Individuals, Markets and Organisations",193
-SH02_REF,dataset,29,12,"Institutions, Values, Environment and Space",314
-SH02_REF,publication,1054,158,"Institutions, Values, Environment and Space",314
-SH03_REF,dataset,10,5,"The Social World, Diversity, Population",248
-SH03_REF,publication,844,115,"The Social World, Diversity, Population",248
-SH04_REF,dataset,127,20,The Human Mind and Its Complexity,308
-SH04_REF,publication,2012,185,The Human Mind and Its Complexity,308
-SH05_REF,dataset,17,6,Cultures and Cultural Production,281
-SH05_REF,publication,894,109,Cultures and Cultural Production,281
-SH06_REF,dataset,25,10,The Study of the Human Past,273
-SH06_REF,publication,982,129,The Study of the Human Past,273
-NA,dataset,3,3,NA,870
-NA,publication,1496,382,NA,870
+LS01_REF,dataset,15,10,"Molecular Biology, Biochemistry, Structural Biology and Molecular Biophysics",213
+LS01_REF,publication,958,137,"Molecular Biology, Biochemistry, Structural Biology and Molecular Biophysics",213
+LS02_REF,dataset,31,11,"Genetics, Omics, Bioinformatics and Systems Biology",225
+LS02_REF,publication,920,140,"Genetics, Omics, Bioinformatics and Systems Biology",225
+LS03_REF,dataset,9,6,Cellular and Developmental Biology,193
+LS03_REF,publication,620,124,Cellular and Developmental Biology,193
+LS04_REF,dataset,2,1,"Physiology, Pathophysiology and Endocrinology",298
+LS04_REF,publication,1181,179,"Physiology, Pathophysiology and Endocrinology",298
+LS05_REF,dataset,7,6,Neuroscience and Neural Disorders,325
+LS05_REF,publication,1063,188,Neuroscience and Neural Disorders,325
+LS06_REF,dataset,10,3,Immunity and Infection,217
+LS06_REF,publication,944,144,Immunity and Infection,217
+LS07_REF,dataset,19,13,"Applied Medical Technologies, Diagnostics, Therapies and Public Health",470
+LS07_REF,publication,2862,285,"Applied Medical Technologies, Diagnostics, Therapies and Public Health",470
+LS08_REF,dataset,64,35,"Ecology, Evolution and Environmental Biology",279
+LS08_REF,publication,1606,169,"Ecology, Evolution and Environmental Biology",279
+LS09_REF,dataset,31,12,"Applied Life Sciences, Biotechnology, and Molecular and Biosystems Engineering",239
+LS09_REF,publication,1071,138,"Applied Life Sciences, Biotechnology, and Molecular and Biosystems Engineering",239
+PE01_REF,dataset,7,3,Mathematics,235
+PE01_REF,publication,3761,185,Mathematics,235
+PE02_REF,dataset,53,16,Fundamental Constituents of Matter,370
+PE02_REF,publication,4897,265,Fundamental Constituents of Matter,370
+PE03_REF,dataset,38,26,Condensed Matter Physics,358
+PE03_REF,publication,3682,259,Condensed Matter Physics,358
+PE04_REF,dataset,36,15,Physical and Analytical Chemical Sciences,333
+PE04_REF,publication,2499,216,Physical and Analytical Chemical Sciences,333
+PE05_REF,dataset,34,10,Synthetic Chemistry and Materials,465
+PE05_REF,publication,3003,277,Synthetic Chemistry and Materials,465
+PE06_REF,dataset,82,20,Computer Science and Informatics,414
+PE06_REF,publication,5069,298,Computer Science and Informatics,414
+PE07_REF,dataset,10,6,Systems and Communication Engineering,386
+PE07_REF,publication,3750,235,Systems and Communication Engineering,386
+PE08_REF,dataset,42,18,Products and Processes Engineering,511
+PE08_REF,publication,3273,286,Products and Processes Engineering,511
+PE09_REF,dataset,22,12,Universe Sciences,249
+PE09_REF,publication,5685,192,Universe Sciences,249
+PE10_REF,dataset,84,44,Earth System Science,277
+PE10_REF,publication,1992,176,Earth System Science,277
+SH01_REF,dataset,4,5,"Individuals, Markets and Organisations",194
+SH01_REF,publication,363,81,"Individuals, Markets and Organisations",194
+SH02_REF,dataset,29,12,"Institutions, Values, Environment and Space",324
+SH02_REF,publication,1056,159,"Institutions, Values, Environment and Space",324
+SH03_REF,dataset,10,5,"The Social World, Diversity, Population",253
+SH03_REF,publication,847,117,"The Social World, Diversity, Population",253
+SH04_REF,dataset,127,20,The Human Mind and Its Complexity,335
+SH04_REF,publication,2025,193,The Human Mind and Its Complexity,335
+SH05_REF,dataset,17,6,Cultures and Cultural Production,288
+SH05_REF,publication,897,111,Cultures and Cultural Production,288
+SH06_REF,dataset,25,10,The Study of the Human Past,276
+SH06_REF,publication,987,131,The Study of the Human Past,276
+NA,dataset,1,1,NA,105
+NA,publication,379,40,NA,105
