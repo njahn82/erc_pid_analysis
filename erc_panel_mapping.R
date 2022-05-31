@@ -1,6 +1,5 @@
 ## Match to ERC panels
 library(tidyverse)
-library(tidytext)
 # Internal ERC data
 erc_panels <- readxl::read_xlsx("erc_data/erc-grants-domains-panels.xlsx", guess_max = 50000)
 erc_tmp <- erc_panels %>%
@@ -104,7 +103,7 @@ panel_df %>%
 ## Number of work by repo and panel
 
 panel_table_a <- panel_df %>%
-  group_by(reference_evaluation_panel, officialname, oaire_result_type, openairecompatibility, opendoar_link) %>%
+  group_by(reference_evaluation_panel, officialname, oaire_result_type, openairecompatibility, opendoar_link, data_source_id) %>%
   summarise(works = n_distinct(oaire_result_id),
             projects_with_repo_works = n_distinct(grant_id)) %>%
   inner_join(projects_by_panel, by = "reference_evaluation_panel") %>%
@@ -126,6 +125,8 @@ panel_df %>%
 
 
 ####
+library(tidytext)
+
 panel_df_plot <- panel_df %>%
   filter(oaire_result_type == "publication", !is.na(panel_domain)) %>%
   group_by(panel_domain, officialname) %>%

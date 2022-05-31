@@ -1,5 +1,4 @@
 ---
-title: "ERC Repository Usage"
 format:
   html:
     page-layout: "full"
@@ -10,6 +9,9 @@ execute:
   warning: false
 ---
 
+<div class="myfints">
+
+<h2> ERC Repository Usage </h2>
 <p class="lead">
 
 This tool provides insights into the usage of repositories to make ERC-funded research available. The interactive table breaks down usage by the number and percentage of works deposited ("Deposits") and the number and percentage of ERC projects making use of a repository ("Projects"). Figures are presented by repository type and ERC panel.
@@ -57,6 +59,7 @@ table_df <- repo_by_panel %>%
     label,
     officialname,
     opendoar_link,
+    data_source_id,
     oaire_result_type,
     openairecompatibility,
     works,
@@ -125,7 +128,9 @@ g <- reactable::reactable(
     officialname = colDef(name = "Repository",
                    cell = function(value, index) {
                      repo_info <- htmltools::tags$a(
-                    href = shared_df$data()$opendoar_link[index],
+                    href = paste0(
+                      "https://explore.openaire.eu/search/dataprovider?datasourceId=",
+                      shared_df$data()$data_source_id[index]),
                     as.character(value),
                     target="_blank"
                 )
@@ -195,6 +200,9 @@ g <- reactable::reactable(
     opendoar_link = colDef(
       show = FALSE
     ),
+   data_source_id = colDef(
+     show = FALSE
+   ),
     projects = colDef(
       show = FALSE
     ),
@@ -376,6 +384,10 @@ tags$link(href = "https://fonts.googleapis.com/css?family=Karla:400,700|Fira+Mon
 .name {
   font-weight: 900;
 }
+
+.myfints {
+  font-family: "Karla", Helvetica Neue, Helvetica, Arial, sans-serif;
+}
 ```
 
 ```{js, echo = FALSE}
@@ -385,3 +397,5 @@ $(document).ready(function() {
     document.getElementById("filter_panel").getElementsByClassName("selectized")[0].selectize.setValue("LS01: Molecular Biology, Biochemistry, Structural Biology and Molecular Biophysics", false);
 });
 ```
+
+</div>
