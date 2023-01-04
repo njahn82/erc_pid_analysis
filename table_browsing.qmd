@@ -9,12 +9,12 @@ execute:
   warning: false
 ---
 
-<div class="myfints">
+::: myfints
+<h2>ERC Repository Usage</h2>
 
-<h2> ERC Repository Usage </h2>
 <p class="lead">
 
-This tool provides insights into the usage of repositories to make ERC-funded research available. The interactive table breaks down usage by the number and percentage of works deposited ("Deposits") and the number and percentage of ERC projects making use of a repository ("Projects"). Figures are presented by repository type and ERC panel.
+This tool provides insights into the usage of repositories to make ERC-funded research available. The interactive table breaks down usage by the number and percentage of works deposited ("Deposits") and the number and percentage of ERC projects making use of a repository ("Projects"). Figures are presented by [ERC panel as introduced in WP2021]( https://erc.europa.eu/news/new-erc-panel-structure-2021-and-2022).
 
 </p>
 
@@ -30,7 +30,9 @@ library(glue)
 library(crosstalk)
 
 # Repo usage by ERC panel
-repo_by_panel <- readr::read_csv("data/repo_works_by_panel.csv")
+repo_by_panel <- readr::read_csv("data/repo_works_by_panel.csv") |>
+  # Remove duplicate Zenodo
+  filter(!(officialname %in% "Zenodo" & openairecompatibility %in% "OpenAIRE Basic (DRIVER OA)"))
 panel_all <- readr::read_csv("data/panel_works.csv")
 ```
 
@@ -58,7 +60,7 @@ table_df <- repo_by_panel %>%
     reference_evaluation_panel,
     label,
     officialname,
-    opendoar_link,
+   # opendoar_link,
     data_source_id,
     oaire_result_type,
     openairecompatibility,
@@ -81,7 +83,7 @@ shared_df <- SharedData$new(table_df)
 ```
 
 ```{r}
-#|l label: reactable definition
+#| label: reactable definition
 #' React bar chart helper
 #'
 #' From <https://glin.github.io/reactable/articles/building-twitter-followers.html>
@@ -117,6 +119,7 @@ g <- reactable::reactable(
   shared_df,
   pagination = TRUE,
   highlight = TRUE,
+  resizable = TRUE,
   # new in v0.2.3.9000
   defaultColDef = colDef(vAlign = "center", headerClass = "header"),
   defaultSorted = "works",
@@ -197,9 +200,6 @@ g <- reactable::reactable(
     label = colDef(
       show = FALSE
     ),
-    opendoar_link = colDef(
-      show = FALSE
-    ),
    data_source_id = colDef(
      show = FALSE
    ),
@@ -237,16 +237,6 @@ htmltools::div(
   # filters,
   htmltools::div(
     class = "filters",
-    htmltools::div(
-      class = "filter-input-type",
-      filter_select(
-        "filter_type",
-        "Repository Type",
-        shared_df,
-        ~ oaire_result_type,
-        multiple = FALSE
-      )
-    ),
     htmltools::div(
       class = "filter-input",
       filter_select(
@@ -393,9 +383,7 @@ tags$link(href = "https://fonts.googleapis.com/css?family=Karla:400,700|Fira+Mon
 ```{js, echo = FALSE}
  /* https://stackoverflow.com/a/66216595 */
 $(document).ready(function() {
-    document.getElementById("filter_type").getElementsByClassName("selectized")[0].selectize.setValue("publication", false);
     document.getElementById("filter_panel").getElementsByClassName("selectized")[0].selectize.setValue("LS01: Molecular Biology, Biochemistry, Structural Biology and Molecular Biophysics", false);
 });
 ```
-
-</div>
+:::
